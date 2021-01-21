@@ -112,6 +112,7 @@ namespace Task03
 
         public override string ToString()
         {
+            SimplificationFractionNumber();
             if (numerator == 0)
             {
                 return "0";
@@ -188,6 +189,48 @@ namespace Task03
                 return numerator + "/" + denominator;
             }
         }
+
+        /// <summary>
+        /// Упрощение дроби
+        /// </summary>
+        public void SimplificationFractionNumber()
+        {
+            int numerator = Math.Abs(Numerator);
+            int denominator = Math.Abs(Denominator);
+            int hcm = 1;
+            if (numerator < denominator)
+            {
+                for (int i = numerator; i > 1; i--)
+                {
+                    if(numerator % i == 0 & denominator % i == 0)
+                    {
+                        hcm = i;
+                        i = 1;
+                    } 
+                }
+                Numerator /= hcm;
+                Denominator /= hcm;
+            }
+            else if(numerator > denominator)
+            {
+                for (int i = denominator; i > 1; i--)
+                {
+                    if (numerator % i == 0 & denominator % i == 0)
+                    {
+                        hcm = i;
+                        i = 1;
+                    }
+                }
+                Numerator /= hcm;
+                Denominator /= hcm;
+            } 
+            else 
+            {
+                Numerator /= Numerator;
+                Denominator /= Denominator;
+            }
+        }
+
         public static FractionNumber operator +(FractionNumber fn1, FractionNumber fn2)
         {
             int lcm;
@@ -204,8 +247,9 @@ namespace Task03
             numerator = fn1.Numerator * (lcm / fn1.Denominator);
             numerator += fn2.Numerator * (lcm / fn2.Denominator);
             denominator = lcm;
-
-            return new FractionNumber() { Numerator = numerator, Denominator = denominator };
+            FractionNumber temp = new FractionNumber() { Numerator = numerator, Denominator = denominator };
+            temp.SimplificationFractionNumber();
+            return temp;
         }
 
         public static FractionNumber operator -(FractionNumber fn1, FractionNumber fn2)
@@ -225,22 +269,27 @@ namespace Task03
             numerator -= fn2.Numerator * (lcm / fn2.Denominator);
             denominator = lcm;
 
-            return new FractionNumber() { Numerator = numerator, Denominator = denominator };
+            FractionNumber temp = new FractionNumber() { Numerator = numerator, Denominator = denominator };
+            temp.SimplificationFractionNumber();
+            return temp;
         }
 
         public static FractionNumber operator *(FractionNumber fn1, FractionNumber fn2)
         {
             int numerator;
-            int denomirator;
+            int denominator;
             numerator = fn1.Numerator * fn2.Numerator;
-            denomirator = fn1.Denominator * fn2.Denominator;
-            return new FractionNumber { Numerator = numerator, Denominator = denomirator };
+            denominator = fn1.Denominator * fn2.Denominator;
+
+            FractionNumber temp = new FractionNumber() { Numerator = numerator, Denominator = denominator };
+            temp.SimplificationFractionNumber();
+            return temp;
         }
 
         public static FractionNumber operator /(FractionNumber fn1, FractionNumber fn2)
         {
             int numerator;
-            int denomirator;
+            int denominator;
             if (fn2.Numerator == 0)
             {
                 throw new ArgumentException("Числитель второй дроби не может быть равен 0");
@@ -248,8 +297,11 @@ namespace Task03
             else
             {
                 numerator = fn1.Numerator * fn2.Denominator;
-                denomirator = fn1.Denominator * fn2.Numerator;
-                return new FractionNumber { Numerator = numerator, Denominator = denomirator };
+                denominator = fn1.Denominator * fn2.Numerator;
+
+                FractionNumber temp = new FractionNumber() { Numerator = numerator, Denominator = denominator };
+                temp.SimplificationFractionNumber();
+                return temp;
             }
 
         }
